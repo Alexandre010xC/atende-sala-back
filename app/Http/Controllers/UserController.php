@@ -6,31 +6,52 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\User;
+use Auth;
 
 class UserController extends Controller
 {
-    public function allUsers(Request $request){
+    public function allUsers(Request $request)
+    {
         $users = User::all();
 
         return response()->json($users);
     }
 
-    public function storeOrFind(Request $request){
+    public function user(Request $request)
+    {
+        $user = User::where('token_id','=',$request->token_id)->first();
         $data['name'] = $request->name;
+        $user->update($data);
 
-        if($request->token == 'null'){
-            $token = Str::random(32);
+        return response()->json($user);
+    }
 
-            $data['token'] = $token;
-            $data['password'] = bcrypt($token);
+    public function LoginOrRegister(Request $request)
+    {
+        $data['name'] = $request->name;
+        $token_id = $request->token_id;
 
-            $user = User::create($data);
+        if($token_id == 'null'){
+            $token_id = Str::random(32);
+
+            $data['token_id'] = $token_id;
+            $data['password'] = bcrypt($token_id);
+
+            User::create($data);
+
+            Auth::attempt(['token_id' => $token_id, 'password' => $token_id]);
+            $user = Auth::user();
+                // $auth_token = $user->createToken($token_id);
 
             return response()->json($user);
         }
 
-        $user = User::where('token','=',$request->token)->first();
+        $user = User::where('token_id','=',$token_id)->first();
         $user->update($data);
+
+        Auth::attempt(['token_id' => $token_id, 'password' => $token_id]);
+        $user = Auth::user();
+            // $auth_token = $user->createToken($token_id);
 
         return response()->json($user);
     }
