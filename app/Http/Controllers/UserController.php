@@ -23,36 +23,34 @@ class UserController extends Controller
         $data['name'] = $request->name;
         $user->update($data);
 
-        return response()->json($user);
+        return response()->json($user, 200);
     }
 
     public function LoginOrRegister(Request $request)
     {
-        $data['name'] = $request->name;
         $token_id = $request->token_id;
 
         if($token_id == 'null'){
             $token_id = Str::random(32);
 
+            $data['name'] = $request->name;
             $data['token_id'] = $token_id;
             $data['password'] = bcrypt($token_id);
 
             User::create($data);
 
-            Auth::attempt(['token_id' => $token_id, 'password' => $token_id]);
-            $user = Auth::user();
-                // $auth_token = $user->createToken($token_id);
+        } else if($request->name){
+            $data['name'] = $request->name;
+            $user = User::where('token_id','=',$token_id)->first();
 
-            return response()->json($user);
+            $user->update($data);
+
         }
-
-        $user = User::where('token_id','=',$token_id)->first();
-        $user->update($data);
 
         Auth::attempt(['token_id' => $token_id, 'password' => $token_id]);
         $user = Auth::user();
             // $auth_token = $user->createToken($token_id);
 
-        return response()->json($user);
+        return response()->json($user, 200);
     }
 }
