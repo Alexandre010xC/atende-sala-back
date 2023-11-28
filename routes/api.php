@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClassroomController;
 
-Route::middleware('auth:sanctum')->get('/bearer_token_user', function (Request $request) {});
+Route::middleware('auth:sanctum')->get('/bearer_token_user', function (Request $request) {
+    return Auth::user();
+});
 
 
 

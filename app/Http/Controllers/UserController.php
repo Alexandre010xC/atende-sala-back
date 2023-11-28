@@ -49,8 +49,8 @@ class UserController extends Controller
 
         Auth::attempt(['token_id' => $token_id, 'password' => $token_id]);
         $user = Auth::user();
-            // $auth_token = $user->createToken($token_id);
+            $auth_token = $user->createToken($token_id);
 
-        return response()->json($user, 200);
+        return response()->json($auth_token, 200);
     }
 }
