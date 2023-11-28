@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('classroom_id')->references('id')->on('classrooms');
             $table->integer('student_id');
             $table->foreign('student_id')->references('id')->on('users');
-            $table->string('position_seat');
+            $table->string('seat');
             $table->timestamps();
         });
     }

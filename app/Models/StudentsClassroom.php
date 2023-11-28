@@ -13,6 +13,6 @@ class StudentsClassroom extends Model
         'id',
         'classroom_id',
         'student_id',
-        'position_seat',
+        'seat',
     ];
 }

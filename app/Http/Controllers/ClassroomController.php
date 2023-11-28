@@ -43,4 +43,25 @@ class ClassroomController extends Controller
 
         return response()->json($classroom, 200);
     }
+
+    public function joinClassroom(Request $request, string $id)
+    {
+        $token_id = $request->token_id;
+        if(!Auth::attempt(['token_id' => $token_id, 'password' => $token_id])){
+            return response()->json(['message' => 'user not found'], 401);
+        }
+        $user = Auth::user()->id;
+
+        $classroom = Classroom::where('id','=',$id)->first();
+
+        $studentPresence = new StudentsClassroom();
+        $studentPresence->classroom_id = $classroom->id;
+        $studentPresence->student_id = $user;
+        $studentPresence->seat = $request->seat;
+
+        $studentPresence->save();
+        $studentPresence->refresh();
+
+        return response()->json($studentPresence, 200);
+    }
 }

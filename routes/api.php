@@ -11,7 +11,7 @@ Route::post('/create-class', [ClassroomController::class, 'createClassroom']);
 
 // Student Routes
 Route::get('/search-class/{id}', [ClassroomController::class, 'searchClassroom']);
-// Route::post('/join', [ApiController::class, 'joinClassroom']);
+Route::post('/join/{id}', [ClassroomController::class, 'joinClassroom']);
 // Route::patch('/ask', [ApiController::class, 'askAssistance']);
 
 // Professor/Student Route
